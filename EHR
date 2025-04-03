@@ -1,0 +1,163 @@
+import tkinter as tk
+from tkinter import messagebox, simpledialog, scrolledtext
+
+employee_signin = {'140520': 'MICK1', '140521': 'MICK2', '140522': 'MICK3'}
+
+patients = {
+    '1145980': ['Name: Michael Smith', 'Gender: Male', 'Age: 28', "Address: 100 Main St Atlanta GA", "Diagnosis: Flu", "Treatment: Antiviral Medication"],
+    '1145981': ['Name: Mary Brown', 'Gender: Female', 'Age: 32', "Address: 251 Spring Street Kennesaw GA", "Diagnosis: Cold", "Treatment: Rest and Hydration"],
+    '1145982': ['Name: John Miller ', 'Gender: Male', 'Age: 18', "Address: 5th Street Morrow GA", "Diagnosis: Arthritis", "Treatment: Painkillers"],
+    '1145983': ['Name: Brian Martinez', 'Gender: Male', 'Age: 25', "Address: 25 Washington Way Marrietta GA", "Diagnosis: Diabetes", "Treatment: Medication & Insulin"],
+    '1145984': ['Name: Aubrey Gonzales', 'Gender: Female', 'Age: 20', "Address: 101 President Road Johns Creek GA", "Diagnosis: Asthma", "Treatment: Inhaler & Medication"],
+    '1145985': ['Name: Jeffrey Thomas', 'Gender: Male', 'Age: 30', "Address: 350 Swiss Road Cumming GA", "Diagnosis: Anxiety", "Treatment: Therapy"],
+    '1145986': ['Name: Erica Jackson', 'Gender: Female', 'Age: 23', "Address: 200 Kuhl Ave Atlanta GA", "Diagnosis: Heart Disease", "Treatment: Angioplasty"],
+    '1145987': ['Name: Bella Blackman', 'Gender: Female', 'Age: 13', "Address: 70 Lake St MAcon GA", "Diagnosis: Cold", "Treatment: Rest and Hydration"],
+    '1145988': ['Name: Rheinhart Chandler', 'Gender: Male', 'Age: 44', "Address: 31 Redsea Way Lawrenceville GA", "Diagnosis: Flu", "Treatment: Antiviral Medication"],
+    '1145989': ['Name: John Knoedler', 'Gender: Male', 'Age: 56', "Address: 55 River Drive Alpharetta GA", "Diagnosis: Diabetes", "Treatment: Medication & Insulin"],
+    '1145990': ['Name: Adira Miller', 'Gender: Female', 'Age: 61', "Address: 16 Safe Lane Riverdale GA", "Diagnosis: Asthma", "Treatment: Inhaler & Medication"],
+    '1145991': ['Name: Jason Davis', 'Gender: Male', 'Age: 90', "Address: 560 Creek Side Way Snellville GA", "Diagnosis: Cancer", "Treatment: Chemotherapy"]
+}
+
+current_user = None
+
+# Register Function
+def register_patient():
+    mrn = simpledialog.askstring("Register Patient", "Enter New Patient MRN#")
+    if mrn in patients:
+        messagebox.showinfo("Info", "Patient already exists!")
+        return
+    name = simpledialog.askstring("Patient Info", "Enter Patient Name:")
+    gender = simpledialog.askstring("Patient Info", "Enter Gender:")
+    age = simpledialog.askinteger("Patient Info", "Enter Age:")
+    address = simpledialog.askstring("Patient Info", "Enter Address:")
+    diagnosis = simpledialog.askstring("Patient Info", "Enter Diagnosis:")
+    treatment = simpledialog.askstring("Patient Info", "Enter Treatment:")
+
+    patients[mrn] = [f"Name: {name}", f"Gender: {gender}", f"Age: {age}", f"Address: {address}", f"Diagnosis: {diagnosis}", f"Treatment: {treatment}"]
+    messagebox.showinfo("Success", f"Patient {name} added successfully!")
+# Update Function
+def update_patient():
+    mrn = simpledialog.askstring("Update Patient", "Enter Patient MRN#")
+    if mrn in patients:
+        # Show current patient details
+        current_details = '\n'.join(patients[mrn])
+        messagebox.showinfo("Current Patient Details", current_details)
+
+        # Ask which field to update
+        field = simpledialog.askstring(
+            "Update Patient",
+            "What do you want to update? (Name / Gender / Age / Address / Diagnosis / Treatment)"
+        )
+
+        if field:
+            field = field.lower()
+            if field == "name":
+                new_value = simpledialog.askstring("Update Name", "Enter new Name:")
+                patients[mrn][0] = f"Name: {new_value}"
+            elif field == "gender":
+                new_value = simpledialog.askstring("Update Gender", "Enter new Gender:")
+                patients[mrn][1] = f"Gender: {new_value}"
+            elif field == "age":
+                new_value = simpledialog.askinteger("Update Age", "Enter new Age:")
+                patients[mrn][2] = f"Age: {new_value}"
+            elif field == "address":
+                new_value = simpledialog.askstring("Update Address", "Enter new Address:")
+                patients[mrn][3] = f"Address: {new_value}"
+            elif field == "diagnosis":
+                new_value = simpledialog.askstring("Update Diagnosis", "Enter new Diagnosis:")
+                patients[mrn][4] = f"Diagnosis: {new_value}"
+            elif field == "treatment":
+                new_value = simpledialog.askstring("Update Treatment", "Enter new Treatment:")
+                patients[mrn][5] = f"Treatment: {new_value}"
+            else:
+                messagebox.showerror("Invalid Field", "Please enter a valid field name to update.")
+                return
+
+            messagebox.showinfo("Updated", f"{field.capitalize()} updated successfully!")
+        else:
+            messagebox.showerror("Error", "No field entered!")
+    else:
+        messagebox.showerror("Error", "Patient not found!")
+
+# Search Patient Function
+def search_patient():
+    mrn = simpledialog.askstring("Search Patient", "Enter Patient MRN#")
+    if mrn in patients:
+        details = '\n'.join(map(str, patients[mrn]))
+        messagebox.showinfo("Patient Found", details)
+    else:
+        messagebox.showerror("Not Found", "Patient not found!")
+# RRemove Patient Function
+def remove_patient():
+    mrn = simpledialog.askstring("Remove Patient", "Enter Patient MRN# to delete")
+    if mrn in patients:
+        del patients[mrn]
+        messagebox.showinfo("Deleted", f"Patient {mrn} removed successfully.")
+    else:
+        messagebox.showerror("Not Found", "Patient not found!")
+
+# Provide List of All patient Function
+def list_all_patients():
+    all_patients.delete(1.0, tk.END)
+    for mrn, details in patients.items():
+        all_patients.insert(tk.END, f"MRN: {mrn}\n")
+        all_patients.insert(tk.END, '\n'.join(map(str, details)) + "\n\n")
+
+# Login Check
+def login():
+    global current_user
+    emp_id = emp_entry.get()
+    password = pass_entry.get()
+    if emp_id in employee_signin and employee_signin[emp_id] == password:
+        current_user = emp_id
+        login_frame.pack_forget()
+        app_frame.pack()
+    else:
+        messagebox.showerror("Login Failed", "Invalid Credentials")
+# Logout Check
+def logout():
+    global current_user
+    current_user = None
+    app_frame.pack_forget()
+    emp_entry.delete(0, tk.END)
+    pass_entry.delete(0, tk.END)
+    login_frame.pack()
+
+# App Window
+root = tk.Tk()
+root.title("Electronic Medical Record")
+root.geometry("800x1000")
+root.configure(bg='lightblue')
+
+
+
+
+# Login Frame
+login_frame = tk.Frame(root)
+tk.Label(login_frame, text="Employee ID:", font=("Arial", 16, 'bold'), bg='lightgrey', fg="darkblue", width=30).pack(pady=5)
+emp_entry = tk.Entry(login_frame)
+emp_entry.pack(pady=5)
+
+tk.Label(login_frame, text="Password:", font=("Arial", 16, 'bold'), bg='lightgrey', fg="darkblue", width=30).pack(pady=5)
+pass_entry = tk.Entry(login_frame, show="*")
+pass_entry.pack(pady=5)
+
+tk.Button(login_frame, text="Login", command=login, font=("Arial", 16, 'bold'), bg='lightgrey', fg="darkblue").pack(pady=10)
+login_frame.pack()
+
+
+# App Frame after login
+app_frame = tk.Frame(root)
+
+tk.Label(app_frame, text="Welcome to the OPEN EMR System", fg="darkblue", bg='lightblue', font=("Arial", 82)).pack(pady=5)
+tk.Button(app_frame, text="Register Patient", command=register_patient, font=("Arial", 16,'bold'), bg='lightblue', fg="darkblue", width=30).pack(pady=5)
+tk.Button(app_frame, text="Update Patient", command=update_patient, font=("Arial", 16,'bold'), bg='lightblue', fg="darkblue", width=30).pack(pady=5)
+tk.Button(app_frame, text="Search Patient", command=search_patient, font=("Arial", 16,'bold'), bg='lightblue', fg="darkblue", width=30).pack(pady=5)
+tk.Button(app_frame, text="Delete Patient", command=remove_patient, font=("Arial", 16,'bold'), bg='lightblue', fg="darkblue", width=30).pack(pady=5)
+tk.Button(app_frame, text="All Patients", command=list_all_patients, font=("Arial", 16,'bold'), bg='lightblue', fg="darkblue", width=30).pack(pady=5)
+tk.Button(app_frame, text="Logout", command=logout, font=("Arial", 16,'bold'), bg='lightblue', fg="darkblue", width=30).pack(pady=5)
+
+all_patients = scrolledtext.ScrolledText(app_frame, bg='lightblue', fg="darkblue", width=250, height=200, font='Arial, 25')
+all_patients.pack(pady=10)
+
+root.mainloop()
