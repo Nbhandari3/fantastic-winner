@@ -18,12 +18,22 @@ if "logged_in" not in st.session_state:
 
 if "patients" not in st.session_state:
     st.session_state.patients = {
-        "1145980": ["Name: Michael Smith", "Gender: Male", "Age: 28",
-                    "Address: 100 Main St Atlanta GA", "Diagnosis: Flu",
-                    "Treatment: Antiviral Medication"],
-        "1145981": ["Name: Mary Brown", "Gender: Female", "Age: 32",
-                    "Address: 251 Spring Street Kennesaw GA", "Diagnosis: Cold",
-                    "Treatment: Rest and Hydration"]
+        "1145980": [
+            "Name: Michael Smith",
+            "Gender: Male",
+            "Age: 28",
+            "Address: 100 Main St Atlanta GA",
+            "Diagnosis: Flu",
+            "Treatment: Antiviral Medication"
+        ],
+        "1145981": [
+            "Name: Mary Brown",
+            "Gender: Female",
+            "Age: 32",
+            "Address: 251 Spring Street Kennesaw GA",
+            "Diagnosis: Cold",
+            "Treatment: Rest and Hydration"
+        ]
     }
 
 # -----------------------------
@@ -40,7 +50,7 @@ if not st.session_state.logged_in:
             st.session_state.logged_in = True
             st.session_state.user = emp_id
             st.success("Login successful!")
-            st.experimental_rerun()
+            st.rerun()
         else:
             st.error("Invalid credentials")
 
@@ -79,7 +89,7 @@ else:
                 st.success("Patient registered successfully!")
 
     # -----------------------------
-    # UPDATE PATIENT (FIXED)
+    # UPDATE PATIENT
     # -----------------------------
     st.subheader("Update Patient")
     with st.expander("Update Existing Patient"):
@@ -161,4 +171,4 @@ else:
     if st.button("Logout", key="logout_btn"):
         st.session_state.logged_in = False
         st.session_state.user = None
-        st.experimental_rerun()
+        st.rerun()
