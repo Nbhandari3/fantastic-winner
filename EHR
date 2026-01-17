@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox, simpledialog, scrolledtext
 
-employee_signin = {'140520': 'MICK1', '140521': 'MICK2', '140522': 'MICK3'}
+employee_signin = {'123456': 'admin','140520': 'MICK1', '140521': 'MICK2', '140522': 'MICK3'}
 
 patients = {
     '1145980': ['Name: Michael Smith', 'Gender: Male', 'Age: 28', "Address: 100 Main St Atlanta GA", "Diagnosis: Flu", "Treatment: Antiviral Medication"],
