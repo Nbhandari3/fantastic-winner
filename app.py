@@ -1,16 +1,16 @@
 import streamlit as st
 
-# Sample Employee Login
+# Employee Login
 employee_signin = {'140520': 'MICK1', '140521': 'MICK2', '140522': 'MICK3'}
 
-# Sample Patient Data
-patients = {
-    '1145980': ['Name: Michael Smith', 'Gender: Male', 'Age: 28', "Address: 100 Main St Atlanta GA", "Diagnosis: Flu", "Treatment: Antiviral Medication"],
-    '1145981': ['Name: Mary Brown', 'Gender: Female', 'Age: 32', "Address: 251 Spring Street Kennesaw GA", "Diagnosis: Cold", "Treatment: Rest and Hydration"],
-    # ... you can include all your patient data here
-}
+# Initialize patients in session_state
+if 'patients' not in st.session_state:
+    st.session_state.patients = {
+        '1145980': ['Name: Michael Smith', 'Gender: Male', 'Age: 28', "Address: 100 Main St Atlanta GA", "Diagnosis: Flu", "Treatment: Antiviral Medication"],
+        '1145981': ['Name: Mary Brown', 'Gender: Female', 'Age: 32', "Address: 251 Spring Street Kennesaw GA", "Diagnosis: Cold", "Treatment: Rest and Hydration"],
+    }
 
-# Session state to keep user logged in
+# Initialize login state
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
     st.session_state.user = None
@@ -42,10 +42,10 @@ else:
         new_diagnosis = st.text_input("Diagnosis")
         new_treatment = st.text_input("Treatment")
         if st.button("Register Patient"):
-            if new_mrn in patients:
+            if new_mrn in st.session_state.patients:
                 st.warning("Patient already exists!")
             else:
-                patients[new_mrn] = [
+                st.session_state.patients[new_mrn] = [
                     f"Name: {new_name}",
                     f"Gender: {new_gender}",
                     f"Age: {new_age}",
@@ -59,9 +59,9 @@ else:
     st.subheader("Update Patient")
     with st.expander("Update Existing Patient"):
         update_mrn = st.text_input("MRN to Update")
-        if update_mrn in patients:
+        if update_mrn in st.session_state.patients:
             st.write("Current Details:")
-            for detail in patients[update_mrn]:
+            for detail in st.session_state.patients[update_mrn]:
                 st.write(detail)
 
             field_to_update = st.selectbox("Field to Update", ["Name", "Gender", "Age", "Address", "Diagnosis", "Treatment"])
@@ -69,29 +69,18 @@ else:
             if st.button("Update Patient"):
                 field_map = {"Name": 0, "Gender": 1, "Age": 2, "Address": 3, "Diagnosis": 4, "Treatment": 5}
                 index = field_map[field_to_update]
-                patients[update_mrn][index] = f"{field_to_update}: {new_value}"
+                st.session_state.patients[update_mrn][index] = f"{field_to_update}: {new_value}"
                 st.success(f"{field_to_update} updated successfully!")
         else:
             if update_mrn:
                 st.warning("Patient MRN not found")
 
-    # --- SEARCH PATIENT ---
-    st.subheader("Search Patient")
-    search_mrn = st.text_input("Enter MRN to Search")
-    if st.button("Search Patient"):
-        if search_mrn in patients:
-            st.write("Patient Details:")
-            for detail in patients[search_mrn]:
-                st.write(detail)
-        else:
-            st.error("Patient not found!")
-
     # --- DELETE PATIENT ---
     st.subheader("Delete Patient")
     delete_mrn = st.text_input("Enter MRN to Delete")
     if st.button("Delete Patient"):
-        if delete_mrn in patients:
-            del patients[delete_mrn]
+        if delete_mrn in st.session_state.patients:
+            del st.session_state.patients[delete_mrn]
             st.success(f"Patient {delete_mrn} deleted successfully!")
         else:
             st.error("Patient not found!")
@@ -99,7 +88,7 @@ else:
     # --- LIST ALL PATIENTS ---
     st.subheader("All Patients")
     if st.button("Show All Patients"):
-        for mrn, details in patients.items():
+        for mrn, details in st.session_state.patients.items():
             st.write(f"MRN: {mrn}")
             for d in details:
                 st.write(d)
