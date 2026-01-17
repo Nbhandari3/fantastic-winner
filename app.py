@@ -5,6 +5,7 @@ import streamlit as st
 # -----------------------------
 employee_signin = {
     "140520": "MICK1",
+    "123456": "admin",
     "140521": "MICK2",
     "140522": "MICK3"
 }
@@ -42,8 +43,8 @@ if "patients" not in st.session_state:
 if not st.session_state.logged_in:
     st.title("Employee Login")
 
-    emp_id = st.text_input("Employee ID", key="login_emp")
-    password = st.text_input("Password", type="password", key="login_pass")
+    emp_id = st.text_input("Employee ID (123456)", key="login_emp")
+    password = st.text_input("Password (admin)", type="password", key="login_pass")
 
     if st.button("Login", key="login_btn"):
         if emp_id in employee_signin and employee_signin[emp_id] == password:
